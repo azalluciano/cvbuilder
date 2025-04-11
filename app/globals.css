@@ -2,3 +2,23 @@
 @plugin "daisyui" {
   themes: all;
 }
+
+.scrollable {
+  overflow-y: auto;
+  max-height: 100vh;
+}
+
+.scrollable-preview {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,103 +1,174 @@
-import Image from "next/image";
+"use client";
+import { RotateCw, ScanEye } from "lucide-react";
+import PersonalDetailsForm from "./component/PersonalDetailsForm";
+import { Experience, PersonalDetails } from "@/type";
+import { useState } from "react";
+import { experiencesPreset, personalDetailsPreset } from "@/pressets";
+import CVPreview from "./component/CVPreview";
+import ExperienceForm from "./component/ExperienceForm";
 
 export default function Home() {
+  const [personalDetails, setPersonalDetails] = useState<PersonalDetails>(
+    personalDetailsPreset
+  );
+  const [file, setFile] = useState<File | null>(null);
+  const [theme, setTheme] = useState<string>("retro");
+  const themes = [
+    "light",
+    "dark",
+    "cupcake",
+    "bumblebee",
+    "emerald",
+    "corporate",
+    "synthwave",
+    "retro",
+    "cyberpunk",
+    "valentine",
+    "halloween",
+    "garden",
+    "forest",
+    "aqua",
+    "lofi",
+    "pastel",
+    "fantasy",
+    "wireframe",
+    "black",
+    "luxury",
+    "dracula",
+    "cmyk",
+    "autumn",
+    "business",
+    "acid",
+    "lemonade",
+    "night",
+    "coffee",
+    "winter",
+    "dim",
+    "nord",
+    "sunset",
+  ];
+  const [zoom, setZoom] = useState<number>(163);
+  const [experiences, setExperiences] =
+    useState<Experience[]>(experiencesPreset);
+  const handleResetPersonalDetails = () =>
+    setPersonalDetails({
+      fullName: "",
+      email: "",
+      phone: "",
+      address: "",
+      photoUrl: "",
+      postSeeking: "",
+      description: "",
+    });
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div>
+      <div className="hidden lg:block">
+        <section className="flex items-center h-screen">
+          <div className="w-1/3 h-full p-10 bg-base-200 scrollable no-scrollabar">
+            <div className="mb-4 flex justify-between items-center">
+              <h1 className="text-2xl font-bold italic">
+                CV<span className="text-primary">Builder</span>
+              </h1>
+              <button className="btn btn-primary">
+                Prévisualiser
+                <ScanEye />
+              </button>
+            </div>
+            <div className="flex flex-col gap-6 rounded-lg">
+              <div className="flex justify-between items-center">
+                <h1 className="badge badge-primary badge-outline">
+                  Qui êtes-vous ?
+                </h1>
+                <button
+                  onClick={handleResetPersonalDetails}
+                  className="btn btn-primary btn-sm"
+                >
+                  <RotateCw className="w-4" />
+                </button>
+              </div>
+              <PersonalDetailsForm
+                personalDetails={personalDetails}
+                setPersonalDetails={setPersonalDetails}
+                setFile={setFile}
+              />
+              <div className="flex justify-between items-center">
+                <h1 className="badge badge-primary badge-outline">
+                  Expérience ?
+                </h1>
+                <button className="btn btn-primary btn-sm">
+                  <RotateCw className="w-4" />
+                </button>
+              </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+              <ExperienceForm
+                experience={experiences}
+                setExperinces={setExperiences}
+              />
+            </div>
+          </div>
+
+          <div className="w-2/3 h-full bg-base-100 bg-[url('/file.svg')] bg-cover bg-center scrollable-preview relative">
+            <div className="flex items-center justify-center fixed z-[9999] top-5 right-5">
+              <input
+                type="range"
+                min={50}
+                max={200}
+                value={zoom}
+                onChange={(e) => {
+                  setZoom(Number(e.target.value));
+                }}
+                className="range range-xs range-primary"
+              />
+              <p className="ml-4 text-sm text-primary">{zoom}</p>
+            </div>
+            <select
+              className="select select-primary select-bordered fixed z-[9999] select-sm top-12 right-5 w-30 text-primary"
+              name=""
+              id=""
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+            >
+              {themes.map((themeName) => (
+                <option key={themeName} value={themeName}>
+                  {themeName}
+                </option>
+              ))}
+            </select>
+            <div
+              className="flex justify-center items-center"
+              style={{ transform: `scale(${zoom / 200})` }}
+            >
+              <CVPreview
+                personalDetails={personalDetails}
+                file={file}
+                theme={theme}
+              />
+            </div>
+          </div>
+        </section>
+      </div>
+      <div className="lg:hidden">
+        <div
+          className="hero min-h-screen"
+          style={{
+            backgroundImage:
+              "url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.webp)",
+          }}
+        >
+          <div className="hero-overlay"></div>
+          <div className="hero-content text-neutral-content text-center">
+            <div className="max-w-md">
+              <h1 className="mb-5 text-3xl font-bold">
+                Oops! The CV Builder is only available on desktop.
+              </h1>
+              <p className="mb-5">
+                To create and customize your CV, please use a computer. Thank
+                you for your understanding.
+              </p>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
