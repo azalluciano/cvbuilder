@@ -1,57 +1,58 @@
-"use client";
-import { Experience } from "@/type";
+import { Education } from "@/type";
 import { Minus, Plus } from "lucide-react";
-import React, { ChangeEvent, FC } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 
 type Props = {
-  experience: Experience[];
-  setExperinces: (experience: Experience[]) => void;
+  educations: Education[];
+  setEducations: (experience: Education[]) => void;
 };
 
-const ExperienceForm: FC<Props> = ({ experience, setExperinces }) => {
-  const [newExperience, setNewExperience] = React.useState<Experience>({
-    jobTitle: "",
-    companyName: "",
+const EducationForm: FC<Props> = ({ educations, setEducations }) => {
+  const [newEducation, setNewEducation] = useState<Education>({
+    school: "",
+    degree: "",
     startDate: "",
     endDate: "",
     description: "",
   });
+
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    field: keyof Experience
+    field: keyof Education
   ) => {
-    setNewExperience({ ...newExperience, [field]: e.target.value });
+    setNewEducation({ ...newEducation, [field]: e.target.value });
   };
-  const handleAddExperience = () => {
-    setExperinces([...experience, newExperience]);
-    setNewExperience({
-      jobTitle: "",
-      companyName: "",
+  const handleAddEducation = () => {
+    setEducations([...educations, newEducation]);
+    setNewEducation({
+      school: "",
+      degree: "",
       startDate: "",
       endDate: "",
       description: "",
     });
   };
-  const handleRemoveExperience = () => {
-    setExperinces(experience.slice(0, experience.length - 1));
+  const handleRemoveEducation = () => {
+    setEducations(educations.slice(0, educations.length - 1));
   };
+
   return (
     <div>
       <div className="flex flex-col gap-4">
         <div className="flex justify-between">
           <input
             type="text"
-            placeholder="Poste"
-            value={newExperience.jobTitle}
+            placeholder="Nom de l'école"
+            value={newEducation.school}
             className="input input-bordered w-full"
-            onChange={(e) => handleChange(e, "jobTitle")}
+            onChange={(e) => handleChange(e, "school")}
           />
           <input
             type="text"
-            placeholder="Nom de l'entreprise"
-            value={newExperience.companyName}
+            placeholder="Diplôme"
+            value={newEducation.degree}
             className="input input-bordered w-full ml-4"
-            onChange={(e) => handleChange(e, "companyName")}
+            onChange={(e) => handleChange(e, "degree")}
           />
         </div>
 
@@ -63,7 +64,7 @@ const ExperienceForm: FC<Props> = ({ experience, setExperinces }) => {
             onBlur={(e) => {
               if (!e.target.value) e.target.type = "text";
             }}
-            value={newExperience.startDate}
+            value={newEducation.startDate}
             className="input input-bordered w-full"
             onChange={(e) => handleChange(e, "startDate")}
           />
@@ -74,24 +75,24 @@ const ExperienceForm: FC<Props> = ({ experience, setExperinces }) => {
             onBlur={(e) => {
               if (!e.target.value) e.target.type = "text";
             }}
-            value={newExperience.endDate}
+            value={newEducation.endDate}
             className="input input-bordered w-full ml-4"
             onChange={(e) => handleChange(e, "endDate")}
           />
         </div>
         <textarea
           placeholder="Description"
-          value={newExperience.description}
+          value={newEducation.description}
           className="input input-bordered w-full h-32 overflow-y-auto whitespace-normal break-words"
           onChange={(e) => handleChange(e, "description")}
         ></textarea>
       </div>
       <div className="flex justify-between mt-4">
-        <button onClick={handleAddExperience} className="btn btn-primary mt-4 ">
+        <button onClick={handleAddEducation} className="btn btn-primary mt-4 ">
           Ajouter <Plus className="w-4" />
         </button>
         <button
-          onClick={handleRemoveExperience}
+          onClick={handleRemoveEducation}
           className="btn btn-primary mt-4 "
         >
           Supprimer <Minus className="w-4" />
@@ -101,4 +102,4 @@ const ExperienceForm: FC<Props> = ({ experience, setExperinces }) => {
   );
 };
 
-export default ExperienceForm;
+export default EducationForm;

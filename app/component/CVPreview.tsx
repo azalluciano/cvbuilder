@@ -1,19 +1,43 @@
 "use client";
-import { PersonalDetails } from "@/type";
+import { Education, Experience, PersonalDetails } from "@/type";
 import React, { FC } from "react";
 import Image from "next/image";
-import { Mail, MapPinCheckInside, Phone } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Mail,
+  MapPinCheckInside,
+  Phone,
+} from "lucide-react";
+import { format } from "path";
 
 type Props = {
   personalDetails: PersonalDetails;
   file: File | null;
   theme: string;
+  experiences: Experience[];
+  educations: Education[];
 };
 
-const CVPreview: FC<Props> = ({ personalDetails, file, theme }) => {
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  };
+  return date.toLocaleDateString("fr-FR", options);
+}
+
+const CVPreview: FC<Props> = ({
+  personalDetails,
+  file,
+  theme,
+  experiences,
+  educations,
+}) => {
   return (
     <div
-      className={`flex p-16 w-[950px] h-[1200px] shadow-lg`}
+      className={`flex p-16 w-[950px] h-auto min-h-[1200px] shadow-lg`}
       data-theme={theme}
     >
       <div className="flex flex-col w-1/3">
@@ -81,6 +105,54 @@ const CVPreview: FC<Props> = ({ personalDetails, file, theme }) => {
             {personalDetails.description}
           </p>
         </div>
+        <section className="w-full h-fit p-5">
+          <div className="">
+            <h1 className="uppercase font-bold mb-2">Experiences</h1>
+            <ul className="steps steps-vertical space-y-3">
+              {experiences.map((exp, index) => (
+                <li className="step step-primary" key={index}>
+                  <div className="text-left">
+                    <h2 className="flex test-md uppercase font-bold">
+                      <BriefcaseBusiness className="w-5" />
+                      <span className="ml-2">{exp.jobTitle}</span>
+                    </h2>
+                    <div className="text-sm my-2">
+                      <span className="badge badge-primary">
+                        {exp.companyName}
+                      </span>
+                      <span className="italic text-sm ml-2">
+                        {formatDate(exp.startDate)} au {formatDate(exp.endDate)}
+                      </span>
+                    </div>
+                    <p className="text-sm">{exp.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mt-6">
+            <h1 className="uppercase font-bold mb-2">Formations</h1>
+            <ul className="steps steps-vertical space-y-3">
+              {educations.map((edu, index) => (
+                <li className="step step-primary" key={index}>
+                  <div className="text-left">
+                    <h2 className="flex test-md uppercase font-bold">
+                      <BriefcaseBusiness className="w-5" />
+                      <span className="ml-2">{edu.degree}</span>
+                    </h2>
+                    <div className="text-sm my-2">
+                      <span className="badge badge-primary">{edu.school}</span>
+                      <span className="italic text-sm ml-2">
+                        {formatDate(edu.startDate)} au {formatDate(edu.endDate)}
+                      </span>
+                    </div>
+                    <p className="text-sm">{edu.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
       </div>
     </div>
   );

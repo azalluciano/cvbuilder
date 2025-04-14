@@ -1,11 +1,18 @@
 "use client";
 import { RotateCw, ScanEye } from "lucide-react";
 import PersonalDetailsForm from "./component/PersonalDetailsForm";
-import { Experience, PersonalDetails } from "@/type";
+import { Education, Experience, Language, PersonalDetails } from "@/type";
 import { useState } from "react";
-import { experiencesPreset, personalDetailsPreset } from "@/pressets";
+import {
+  educationsPreset,
+  experiencesPreset,
+  languagesPreset,
+  personalDetailsPreset,
+} from "@/pressets";
 import CVPreview from "./component/CVPreview";
 import ExperienceForm from "./component/ExperienceForm";
+import EducationForm from "./component/EducationForm";
+import LanguageForm from "./component/LanguageForm";
 
 export default function Home() {
   const [personalDetails, setPersonalDetails] = useState<PersonalDetails>(
@@ -50,6 +57,8 @@ export default function Home() {
   const [zoom, setZoom] = useState<number>(163);
   const [experiences, setExperiences] =
     useState<Experience[]>(experiencesPreset);
+  const [educations, setEducations] = useState<Education[]>(educationsPreset);
+  const [languages, setLanguages] = useState<Language[]>(languagesPreset);
   const handleResetPersonalDetails = () =>
     setPersonalDetails({
       fullName: "",
@@ -60,6 +69,15 @@ export default function Home() {
       postSeeking: "",
       description: "",
     });
+  const handleResetExperiences = () => {
+    setExperiences([]);
+  };
+  const handleResetEducations = () => {
+    setEducations([]);
+  };
+  const handleResetLanguages = () => {
+    setLanguages([]);
+  };
   return (
     <div>
       <div className="hidden lg:block">
@@ -93,9 +111,12 @@ export default function Home() {
               />
               <div className="flex justify-between items-center">
                 <h1 className="badge badge-primary badge-outline">
-                  Expérience ?
+                  Expérience
                 </h1>
-                <button className="btn btn-primary btn-sm">
+                <button
+                  onClick={handleResetExperiences}
+                  className="btn btn-primary btn-sm"
+                >
                   <RotateCw className="w-4" />
                 </button>
               </div>
@@ -104,6 +125,31 @@ export default function Home() {
                 experience={experiences}
                 setExperinces={setExperiences}
               />
+
+              <div className="flex justify-between items-center">
+                <h1 className="badge badge-primary badge-outline">Education</h1>
+                <button
+                  onClick={handleResetEducations}
+                  className="btn btn-primary btn-sm"
+                >
+                  <RotateCw className="w-4" />
+                </button>
+              </div>
+              <EducationForm
+                educations={educations}
+                setEducations={setEducations}
+              />
+
+              <div className="flex justify-between items-center">
+                <h1 className="badge badge-primary badge-outline">Langues</h1>
+                <button
+                  onClick={handleResetLanguages}
+                  className="btn btn-primary btn-sm"
+                >
+                  <RotateCw className="w-4" />
+                </button>
+              </div>
+              <LanguageForm languages={languages} setLanguages={setLanguages} />
             </div>
           </div>
 
@@ -142,6 +188,8 @@ export default function Home() {
                 personalDetails={personalDetails}
                 file={file}
                 theme={theme}
+                experiences={experiences}
+                educations={educations}
               />
             </div>
           </div>
