@@ -22,3 +22,32 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+@media print {
+  body {
+    margin: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .cv-container {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .cv-section {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .step {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .a4 {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 20mm;
+    margin: auto;
+  }
+}

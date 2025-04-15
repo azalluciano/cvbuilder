@@ -1,14 +1,21 @@
 "use client";
-import { Education, Experience, PersonalDetails } from "@/type";
-import React, { FC } from "react";
+import {
+  Education,
+  Experience,
+  Hobby,
+  Language,
+  PersonalDetails,
+  Skill,
+} from "@/type";
+import React, { FC, RefObject } from "react";
 import Image from "next/image";
 import {
   BriefcaseBusiness,
   Mail,
   MapPinCheckInside,
   Phone,
+  Star,
 } from "lucide-react";
-import { format } from "path";
 
 type Props = {
   personalDetails: PersonalDetails;
@@ -16,6 +23,11 @@ type Props = {
   theme: string;
   experiences: Experience[];
   educations: Education[];
+  languages: Language[];
+  hobbies: Hobby[];
+  skills: Skill[];
+  download: boolean;
+  ref?: RefObject<HTMLDivElement>;
 };
 
 function formatDate(dateString: string) {
@@ -28,16 +40,53 @@ function formatDate(dateString: string) {
   return date.toLocaleDateString("fr-FR", options);
 }
 
+const getStarRating = (proficiency: string) => {
+  const maxStars = 5;
+  let filledStars = 0;
+
+  switch (proficiency) {
+    case "Débutant":
+      filledStars = 1;
+      break;
+    case "Intermédiaire":
+      filledStars = 3;
+      break;
+    case "Avancé":
+      filledStars = 5;
+      break;
+    default:
+      filledStars = 0;
+  }
+  return (
+    <>
+      {Array.from({ length: filledStars }, (_, index) => (
+        <Star key={index} className={`text-primary `} />
+      ))}
+      {Array.from({ length: maxStars - filledStars }, (_, index) => (
+        <Star key={index + filledStars} className="text-gray-300" />
+      ))}
+    </>
+  );
+};
+
 const CVPreview: FC<Props> = ({
   personalDetails,
   file,
   theme,
   experiences,
   educations,
+  languages,
+  hobbies,
+  skills,
+  download,
+  ref,
 }) => {
   return (
     <div
-      className={`flex p-16 w-[950px] h-auto min-h-[1200px] shadow-lg`}
+      ref={ref}
+      className={`flex p-16 w-[950px] h-auto min-h-[1200px] shadow-lg ${
+        download ? "mb-10" : ""
+      } cv-container`}
       data-theme={theme}
     >
       <div className="flex flex-col w-1/3">
@@ -94,6 +143,43 @@ const CVPreview: FC<Props> = ({
             </ul>
           </div>
         </div>
+        <div className="mt-6">
+          <h1 className="uppercase font-bold my-2">Compétences</h1>
+          <div className="flex flex-wrap gap-2">
+            {skills.map((skill, index) => (
+              <p key={index} className="badge badge-primary uppercase">
+                {skill.name}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <h1 className="uppercase font-bold my-2">Langues</h1>
+          <div className="flex flex-col space-y-2">
+            {languages.map((lang, index) => (
+              <div key={index}>
+                <span className="capitalize font-semibold">
+                  {lang.language}
+                </span>
+                <div className="flex ml-2 mt-2">
+                  {getStarRating(lang.proficiency)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <h1 className="uppercase font-bold my-2">Loisirs</h1>
+          <div className="flex flex-col space-y-2">
+            {hobbies.map((hobby, index) => (
+              <div key={index}>
+                <span className="capitalize">{hobby.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
       <div className="w-2/3 ml-8">
         <div className="w-full flex flex-col space-y-4">
@@ -106,7 +192,7 @@ const CVPreview: FC<Props> = ({
           </p>
         </div>
         <section className="w-full h-fit p-5">
-          <div className="">
+          <div className="cv-section">
             <h1 className="uppercase font-bold mb-2">Experiences</h1>
             <ul className="steps steps-vertical space-y-3">
               {experiences.map((exp, index) => (
@@ -116,11 +202,11 @@ const CVPreview: FC<Props> = ({
                       <BriefcaseBusiness className="w-5" />
                       <span className="ml-2">{exp.jobTitle}</span>
                     </h2>
-                    <div className="text-sm my-2">
+                    <div className="text-sm my-2 flex flex-col">
                       <span className="badge badge-primary">
                         {exp.companyName}
                       </span>
-                      <span className="italic text-sm ml-2">
+                      <span className="italic text-sm mt-2">
                         {formatDate(exp.startDate)} au {formatDate(exp.endDate)}
                       </span>
                     </div>
@@ -130,7 +216,7 @@ const CVPreview: FC<Props> = ({
               ))}
             </ul>
           </div>
-          <div className="mt-6">
+          <div className="mt-6 cv-section">
             <h1 className="uppercase font-bold mb-2">Formations</h1>
             <ul className="steps steps-vertical space-y-3">
               {educations.map((edu, index) => (
@@ -140,9 +226,9 @@ const CVPreview: FC<Props> = ({
                       <BriefcaseBusiness className="w-5" />
                       <span className="ml-2">{edu.degree}</span>
                     </h2>
-                    <div className="text-sm my-2">
+                    <div className="text-sm my-2 flex flex-col">
                       <span className="badge badge-primary">{edu.school}</span>
-                      <span className="italic text-sm ml-2">
+                      <span className="italic text-sm mt-2">
                         {formatDate(edu.startDate)} au {formatDate(edu.endDate)}
                       </span>
                     </div>
